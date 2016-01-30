@@ -1,9 +1,8 @@
-import datetime
 import lxml.html
 from lxml.cssselect import CSSSelector
 
-def get_all_menus(date):
 
+def get_all_menus(date):
     all_menu = {}
     # Grab College 8 menu
     all_menu['8Oakes'] = get_menu(0, date)
@@ -21,7 +20,9 @@ def get_all_menus(date):
     all_menu['CowellStevenson'] = get_menu(4, date)
     return all_menu
 
+
 def get_text(x): return x.text_content()
+
 
 def get_menu(dining_hall, date):
     """
@@ -32,15 +33,15 @@ def get_menu(dining_hall, date):
     """
 
     if dining_hall == 0:  # C8
-        location = "30"   # Location num set to 30 for request to c8
+        location = "30"  # Location num set to 30 for request to c8
     elif dining_hall == 1:  # Porter
-        location = "25"   # Location num set to 25 for porter req
-    elif dining_hall == 2: # 9/10
-        location = "40"   # Location num set to 40 for 9/10
+        location = "25"  # Location num set to 25 for porter req
+    elif dining_hall == 2:  # 9/10
+        location = "40"  # Location num set to 40 for 9/10
     elif dining_hall == 3:  # Crown/Merill
-        location = "20"   # Location num set to 20 for Crown/Merill
+        location = "20"  # Location num set to 20 for Crown/Merill
     elif dining_hall == 4:  # Stevenson
-        location = "05"   # Location num set to 05 for Cowell/Steve
+        location = "05"  # Location num set to 05 for Cowell/Steve
     else:
         return "Invalid Dining Hall Number"
 
@@ -50,7 +51,9 @@ def get_menu(dining_hall, date):
 
     dinner = CSSSelector('body > table:nth-child(4) > tr > td:nth-child(3)')
 
-    menu_page = lxml.html.parse("http://nutrition.sa.ucsc.edu/menuSamp.asp?myaction=read&dtdate={0}%2F{1}%2F{2}&locationNum={3}".format(date.month, date.day, date.year, location)) # make formatted call to menu page
+    menu_page = lxml.html.parse(
+        "http://nutrition.sa.ucsc.edu/menuSamp.asp?myaction=read&dtdate={0}%2F{1}%2F{2}&locationNum={3}".format(
+            date.month, date.day, date.year, location))  # make formatted call to menu page
 
     # Create all of our menus
     break_menu = breakfast(menu_page)  # [0].find_class("menusamprecipes")
@@ -62,11 +65,12 @@ def get_menu(dining_hall, date):
     if len(lunch_menu) == 0:  # If Lunch Doesn't exist, we're closed
         return menu_dict
 
-    elif len(dinner_menu) == 0: # We only have Brunch and Dinner
+    elif len(dinner_menu) == 0:  # We only have Brunch and Dinner
         break_menu = map(get_text, break_menu[0].find_class("menusamprecipes"))
         dinner_menu = map(get_text, lunch_menu[0].find_class("menusamprecipes"))
 
-        return {"Breakfast": break_menu, "Lunch": [], "Dinner": dinner_menu}    #need to return lunch menu because dinner doesn't exist!
+        return {"Breakfast": break_menu, "Lunch": [],
+                "Dinner": dinner_menu}  # need to return lunch menu because dinner doesn't exist!
 
     else:
 
