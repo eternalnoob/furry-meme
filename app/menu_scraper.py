@@ -5,19 +5,19 @@ from lxml.cssselect import CSSSelector
 def get_all_menus(date):
     all_menu = {}
     # Grab College 8 menu
-    all_menu['8Oakes'] = get_menu(0, date)
+    all_menu['Eight Oakes'] = get_menu(0, date)
 
     # Grab Porter Menu
-    all_menu['Porter'] = get_menu(1, date)
+    all_menu['Porter Kresge'] = get_menu(1, date)
 
     # Grab 9/10 Menu
-    all_menu['NineTen'] = get_menu(2, date)
+    all_menu['Nine Ten'] = get_menu(2, date)
 
     # Grab Crown/Merrill Menu
-    all_menu['CrownMerrill'] = get_menu(3, date)
+    all_menu['Crown Merrill'] = get_menu(3, date)
 
     # Grab Cowell/Stevenson Menu
-    all_menu['CowellStevenson'] = get_menu(4, date)
+    all_menu['Cowell Stevenson'] = get_menu(4, date)
     return all_menu
 
 
