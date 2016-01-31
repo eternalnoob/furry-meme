@@ -1,5 +1,5 @@
-from app import *
+from app_start import *
 
 if __name__ == "__main__":
-    debug = True
+    debug = False
     app.run(debug=debug)

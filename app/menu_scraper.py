@@ -1,6 +1,6 @@
 import lxml.html
 from lxml.cssselect import CSSSelector
-from app import *
+from app_start import *
 
 
 def get_all_menus(date):

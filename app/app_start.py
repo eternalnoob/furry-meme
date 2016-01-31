@@ -2,8 +2,11 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date as timedatedate
 from flask_restful import Api
+import json
 import menu_scraper
-from api_routes import MenuAPI, FoodAPI, ReviewAPI
+
+
+def jsonmp(x): return x.json()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -43,6 +46,13 @@ class Menu(db.Model):
         else:
             self.rating = 0
 
+    def json(self):
+        dictionary = {}
+        dictionary['dininghall'] = self.diningHall
+        dictionary['date'] = {"day": self.date.day, "month": self.date.month, "year": self.date.year}
+        dictionary[self.meal] = {"rating": int(self.rating), "menu": map(jsonmp, self.foods)}
+        return dictionary
+
     def __repr__(self):
         return str(self.rating)
 
@@ -63,14 +73,21 @@ class Food(db.Model):
     def __repr__(self):
         return '<Dish: {0}> Recipe# {1}  rating {2}'.format(self.id, self.recipe_number, self.rating)
 
+    def json(self):
+        dict = {}
+        dict['name'] = self.id
+        dict['rating'] = self.rating
+        return dict
+
+
     def calculate_rating(self):
-        sum = 0
+        tsum = 0
         total = 0
         for i in self.reviews:
-            sum += i.rating
+            tsum += i.rating
             total += 1
-        if (sum > 0):
-            self.rating = float(sum)/total
+        if (tsum > 0):
+            self.rating = float(tsum)/total
 
         for menu in self.menus:
             menu.compute_rating()
@@ -95,6 +112,12 @@ class Review(db.Model):
     def __repr__(self):
         return 'Rating:{0}, Date:{1}  for dish{2}'.format(self.rating, self.date, self.food)
 
+    def json(self):
+        test_dict = {'rating': self.rating, 'food_id': self.food}
+        return test_dict
+
+
+
 
 def giveUsOurDailyBread(date):
     meal_dict = menu_scraper.get_all_menus(date)
@@ -112,6 +135,7 @@ def giveUsOurDailyBread(date):
             db.session.merge(Menu(menuitems, dining_hall, date,meal))
     db.session.commit()
 
+from api_routes import MenuAPI, FoodAPI, ReviewAPI
 api.add_resource(FoodAPI, '/api/food')
 api.add_resource(ReviewAPI, '/api/food/rating')
 api.add_resource(MenuAPI, '/api/menu')
