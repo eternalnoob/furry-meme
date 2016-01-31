@@ -1,5 +1,6 @@
 import lxml.html
 from lxml.cssselect import CSSSelector
+from app import *
 
 
 def get_all_menus(date):
@@ -69,7 +70,7 @@ def get_menu(dining_hall, date):
         break_menu = map(get_text, break_menu[0].find_class("menusamprecipes"))
         dinner_menu = map(get_text, lunch_menu[0].find_class("menusamprecipes"))
 
-        return {"Breakfast": break_menu, "Lunch": [],
+        return {"Breakfast": break_menu, "Lunch": break_menu,
                 "Dinner": dinner_menu}  # need to return lunch menu because dinner doesn't exist!
 
     else:
@@ -79,3 +80,5 @@ def get_menu(dining_hall, date):
         dinner_menu = map(get_text, dinner_menu[0].find_class("menusamprecipes"))
 
         return {"Breakfast": break_menu, "Lunch": lunch_menu, "Dinner": dinner_menu}
+
+

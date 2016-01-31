@@ -1,4 +1,4 @@
-from __init__ import *
+from app import *
 import datetime
 import menu_scraper
 
