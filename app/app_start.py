@@ -2,9 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date as timedatedate
 from flask_restful import Api
+import datetime
 import json
 import menu_scraper
-
 
 def jsonmp(x): return x.json()
 
@@ -49,7 +49,7 @@ class Menu(db.Model):
     def json(self):
         dictionary = {}
         dictionary['dininghall'] = self.diningHall
-        dictionary['date'] = {"day": self.date.day, "month": self.date.month, "year": self.date.year}
+        # dictionary['date'] = {"day": self.date.day, "month": self.date.month, "year": self.date.year}
         dictionary[self.meal] = {"rating": int(self.rating), "menu": map(jsonmp, self.foods)}
         return dictionary
 
@@ -134,6 +134,11 @@ def giveUsOurDailyBread(date):
             print(meal,menu)
             db.session.merge(Menu(menuitems, dining_hall, date,meal))
     db.session.commit()
+
+@app.route('/goodthingthisisahackathon/<int:doff>')
+def update_db(doff):
+    date = datetime.date.today() + datetime.timedelta(days=doff)
+    giveUsOurDailyBread(date)
 
 from api_routes import MenuAPI, FoodAPI, ReviewAPI
 api.add_resource(FoodAPI, '/api/food')
