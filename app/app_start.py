@@ -140,6 +140,11 @@ def update_db(doff):
     date = datetime.date.today() + datetime.timedelta(days=doff)
     giveUsOurDailyBread(date)
 
+
+@app.route('/')
+def hi():
+    return "hello_there"
+
 from api_routes import MenuAPI, FoodAPI, ReviewAPI
 api.add_resource(FoodAPI, '/api/food')
 api.add_resource(ReviewAPI, '/api/food/rating')
