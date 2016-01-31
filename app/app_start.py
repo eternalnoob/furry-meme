@@ -135,11 +135,13 @@ def giveUsOurDailyBread(date):
             print(meal,menu)
             db.session.merge(Menu(menuitems, dining_hall, date,meal))
     db.session.commit()
+    print("success")
+    return("no good can come of this")
 
 @app.route('/goodthingthisisahackathon/<int:doff>')
 def update_db(doff):
     date = datetime.date.today() + datetime.timedelta(days=doff)
-    giveUsOurDailyBread(date)
+    return giveUsOurDailyBread(date)
 
 
 @app.route('/')
