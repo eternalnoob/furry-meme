@@ -22,7 +22,7 @@ class ReviewAPI(Resource):
         today = datetime.date.today()
         if x:
             db.session.merge(Review(x, float(args['rating']), today))
-            db.commit()
+            db.session.commit()
 
 def json_map(s): return s.json()
 menu_args = reqparse.RequestParser()
@@ -39,7 +39,13 @@ class MenuAPI(Resource):
         else:
             date = datetime.date.today() + datetime.timedelta(days=int(args['dateoffset']))
         if args['meal'] is None and args['dining_hall'] is None:
-            return map(json_map, Menu.query.filter_by(date=date).all())
+
+            all_meals = Menu.query.filter_by(date=date).all()
+
+
+
+
+
         elif args['meal'] is None:
             return Menu.query.filter_by(date=date, diningHall=args['dining_hall']).all()
         elif args['dining_hall'] is None:
