@@ -5,11 +5,12 @@ from flask_restful import Api
 import datetime
 import json
 import menu_scraper
+import os
 
 def jsonmp(x): return x.json()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 api = Api(app)
 
